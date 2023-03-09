@@ -4,4 +4,4 @@ from typing import List
 
 class PluginModel(BaseModel):
 
-    pass
+    files: List[str]

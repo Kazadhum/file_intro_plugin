@@ -6,6 +6,7 @@ from rigel.models.plugin import PluginRawData
 from rigel.models.rigelfile import RigelfileGlobalData
 from typing import Any, Dict
 from .models import PluginModel
+import pandas
 
 
 LOGGER = get_logger()
@@ -26,13 +27,14 @@ class FileIntrospectionPlugin(PluginBase):
             providers_data
         )
 
-        # self.model = ModelBuilder(PluginModel).build([], self.raw_data)
+        self.model = ModelBuilder(PluginModel).build([], self.raw_data)
 
     def setup(self) -> None:
-        pass
+        LOGGER.info("Running Setup")
 
     def run(self) -> None:
-        pass
+        df = pandas.read_csv(self.model.files[0])
+        LOGGER.info(f"OUTPUT:\n {df}")
 
     def stop(self) -> None:
-        pass
+        LOGGER.info("Running Stop")
