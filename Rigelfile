@@ -1,0 +1,30 @@
+# This file was generate by RIGEL.
+# Feel free to alter it according to your needs.
+
+---
+
+vars:
+
+  distro: "melodic"
+
+applications:
+
+  test_app:
+
+    distro: "{{ distro }}"
+    jobs:
+
+      diogo:
+        plugin: "file_intro_plugin.FileIntrospectionPlugin"
+        
+        with:
+          name: "Pedro"
+          year: 2042
+          files:
+            - "/file3.sdkfskdj"
+            - "/file4.asdas"
+            - "/file2.dfgdfg"
+
+sequences:
+  deploy: ["diogo"]
+
