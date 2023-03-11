@@ -39,28 +39,45 @@ class FileIntrospectionPlugin(PluginBase):
         LOGGER.info(f"OUTPUT:\n {results_df}")
         
         # Get the target value, which is the value used to evaluate the results
-        average_rms = results_df.loc["Averages", "RMS (pix)"]
+        value_to_compare = results_df.loc[self.model.value_row, self.model.value_column]
 
-        LOGGER.info(f"Average RMS:\n {average_rms}")
+        LOGGER.info(f"Row:{self.model.value_row} | Column: {self.model.value_column}\n {value_to_compare}")
 
-        # Value thresholds for the various levels of quality
-        acceptable_threshold = 3
-        good_threshold = 1
-        excellent_threshold = 0.5
-
-        # Quality levels
-        if average_rms <= 3:
+        # Quality levels, values defined in Rigelfile
+        if value_to_compare <= self.model.acceptable_threshold:
             results_quality = "acceptable"
         else:
             results_quality = "bad"
 
-        if average_rms <= 1:
+        if value_to_compare <= self.model.good_threshold:
             results_quality = "good"
 
-        if average_rms <= 0.5:
+        if value_to_compare <= self.model.great_threshold:
             results_quality = "great"
 
         LOGGER.info(f"The results were {results_quality}!")
+
+        #Comparing quality level vs. required quality level
+
+        LOGGER.info(f"Required quality level: {self.model.required_quality_level}")
+
+        if self.model.required_quality_level == "acceptable":
+            if results_quality != "bad":
+                LOGGER.info("Test passed!")
+            else:
+                LOGGER.info("Test failed!")
+
+        elif self.model.required_quality_level == "good":
+            if (results_quality == "acceptable" or results_quality == "good"):
+                LOGGER.info("Test passed!")
+            else:
+                LOGGER.info("Test failed!")
+
+        elif self.model.required_quality_level == "great":
+            if results_quality == "great":
+                LOGGER.info("Test passed!")
+            else:
+                LOGGER.info("Test failed!")
 
     def stop(self) -> None:
         LOGGER.info("Running Stop")
