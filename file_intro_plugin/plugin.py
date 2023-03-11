@@ -30,7 +30,8 @@ class FileIntrospectionPlugin(PluginBase):
         self.model = ModelBuilder(PluginModel).build([], self.raw_data)
 
     def setup(self) -> None:
-        LOGGER.info("Running Setup")
+        # LOGGER.info("Running Setup") #Debug line
+        pass
 
     def run(self) -> None:
 
@@ -80,4 +81,5 @@ class FileIntrospectionPlugin(PluginBase):
                 LOGGER.info("Test failed!")
 
     def stop(self) -> None:
-        LOGGER.info("Running Stop")
+        # LOGGER.info("Running Stop") # Debug line
+        pass
