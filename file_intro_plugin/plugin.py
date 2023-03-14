@@ -39,10 +39,35 @@ class FileIntrospectionPlugin(PluginBase):
         results_df = pandas.read_csv(self.model.files[0], index_col="Collection #")
         LOGGER.info(f"OUTPUT:\n {results_df}")
         
-        # Get the target value, which is the value used to evaluate the results
-        value_to_compare = results_df.loc[self.model.value_row, self.model.value_column]
 
-        LOGGER.info(f"Row:{self.model.value_row} | Column: {self.model.value_column}\n {value_to_compare}")
+        # Decide which value to use for comparison according to the Rigelfile
+        
+
+        if (self.model.use_latest_row and self.model.use_latest_column):
+            
+            value_to_compare = results_df.loc[results_df.index[-1], results_df.columns[-1]]
+
+            LOGGER.info(f"Row: {results_df.index[-1]} | Column: {results_df.columns[-1]}\n {value_to_compare}")
+
+        else:
+            if self.model.use_latest_row:
+                
+                value_to_compare = results_df.loc[results_df.index[-1], self.model.value_column]
+
+                LOGGER.info(f"Row: {results_df.index[-1]} | Column: {self.model.value_column}\n {value_to_compare}")
+
+            elif self.model.use_latest_column:
+                
+                value_to_compare = results_df.loc[self.model.value_row, results_df.columns[-1]]
+                
+                LOGGER.info(f"Row: {self.model.value_row} | Column: {results_df.columns[-1]}\n {value_to_compare}")
+
+            else:
+                
+                value_to_compare = results_df.loc[self.model.value_row, self.model.value_column]
+
+                LOGGER.info(f"Row:{self.model.value_row} | Column: {self.model.value_column}\n {value_to_compare}")
+
 
         # Quality levels, values defined in Rigelfile
         if value_to_compare <= self.model.acceptable_threshold:
@@ -69,7 +94,7 @@ class FileIntrospectionPlugin(PluginBase):
                 LOGGER.info("Test failed!")
 
         elif self.model.required_quality_level == "good":
-            if (results_quality == "acceptable" or results_quality == "good"):
+            if (results_quality == "good" or results_quality == "great"):
                 LOGGER.info("Test passed!")
             else:
                 LOGGER.info("Test failed!")
