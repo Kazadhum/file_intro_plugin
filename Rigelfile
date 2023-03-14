@@ -18,8 +18,17 @@ applications:
         plugin: "file_intro_plugin.FileIntrospectionPlugin"
         with:
           files:
-            - "~/plugin_rigel_ws/file_intro_plugin/csv_files/rgb_to_rgb_results.csv"
+            - "~/catkin_ws/src/atom/csv_calibration_results/rgb_to_rgb_results.csv"
 
+          # Value verification
+          verify_columns: True
+          columns_to_verify:
+            - "RMS (pix)"
+
+          column_verification_threshold: 2
+          verification_comparison_operator: ">" # Can be either ">" or "<"
+
+          # Comparison value selection 
           use_latest_row: True # Only reads the value in the last row and the selected column
           use_latest_column: False # Only reads the value in the last column and the selected row
 
@@ -39,3 +48,4 @@ applications:
 
 sequences:
   deploy: ["diogo"]
+

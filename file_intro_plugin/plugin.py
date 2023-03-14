@@ -39,10 +39,36 @@ class FileIntrospectionPlugin(PluginBase):
         results_df = pandas.read_csv(self.model.files[0], index_col="Collection #")
         LOGGER.info(f"OUTPUT:\n {results_df}")
         
-
-        # Decide which value to use for comparison according to the Rigelfile
         
 
+        # Check for value abnormalities
+        verification_flag = True
+
+        if self.model.verify_columns:
+            if self.model.verification_comparison_operator == ">":
+                for column in self.model.columns_to_verify:
+                    column_max = results_df[column].max()
+
+                    if column_max > self.model.column_verification_threshold:
+                        verification_flag = False
+
+            if self.model.verification_comparison_operator == "<":
+                for column in self.model.columns_to_verify:
+                    column_min = results_df[column].min()
+
+                    if column_min < self.model.column_verification_threshold:
+                        verification_flag = False
+
+            LOGGER.info(f"Are the values verified? {verification_flag}")
+
+            if not verification_flag:
+                LOGGER.error("Abnormal values! Get new values!")
+                exit()
+        
+        
+        
+        
+        # Decide which value to use for comparison according to the Rigelfile
         if (self.model.use_latest_row and self.model.use_latest_column):
             
             value_to_compare = results_df.loc[results_df.index[-1], results_df.columns[-1]]

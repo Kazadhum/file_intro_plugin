@@ -13,3 +13,7 @@ class PluginModel(BaseModel):
     required_quality_level: str
     use_latest_row: bool
     use_latest_column: bool
+    verify_columns: bool
+    columns_to_verify: List[str]
+    column_verification_threshold: float
+    verification_comparison_operator: str
