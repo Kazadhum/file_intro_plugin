@@ -47,6 +47,7 @@ class FileIntrospectionPlugin(PluginBase):
         if self.model.verify_columns:
             if self.model.verification_comparison_operator == ">":
                 for column in self.model.columns_to_verify:
+                    LOGGER.info(f"Verifying column '{column}'")
                     column_max = results_df[column].max()
 
                     if column_max > self.model.column_verification_threshold:
@@ -54,6 +55,8 @@ class FileIntrospectionPlugin(PluginBase):
 
             if self.model.verification_comparison_operator == "<":
                 for column in self.model.columns_to_verify:
+                    LOGGER.info(f"Verifying column '{column}'")
+                    
                     column_min = results_df[column].min()
 
                     if column_min < self.model.column_verification_threshold:
