@@ -5,7 +5,7 @@
 
 vars:
 
-  distro: "noetic"
+  distro: "melodic"
 
 applications:
 
@@ -14,16 +14,17 @@ applications:
     distro: "{{ distro }}"
     jobs:
 
-      diogo:
+      diogo_introspection:
         plugin: "file_intro_plugin.FileIntrospectionPlugin"
-        
         with:
-        
           files:
-            - "~/plugin_rigel_ws/file_intro_plugin/csv_files/rgb_to_rgb_results.csv" # Path to results file
+            - "~/plugin_rigel_ws/file_intro_plugin/csv_files/rgb_to_rgb_results.csv"
+
+          use_latest_row: True # Only reads the value in the last row and the selected column
+          use_latest_column: False # Only reads the value in the last column and the selected row
 
           # Row and column of value to be used to evaluate results
-          value_row: "Averages"
+          value_row: "Averages" # This is only used if use_latest_data is False
           value_column: "RMS (pix)"
 
           # Thresholds for various levels of quality
@@ -36,7 +37,5 @@ applications:
           required_quality_level: "good"
 
 
-
 sequences:
   deploy: ["diogo"]
-
