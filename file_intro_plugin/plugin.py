@@ -44,7 +44,7 @@ class FileIntrospectionPlugin(PluginBase):
         # Check for value abnormalities
         verification_flag = True
 
-        if self.model.verify_columns:
+        if self.model.columns_to_verify != None:
             if self.model.verification_comparison_operator == ">":
                 for column in self.model.columns_to_verify:
                     LOGGER.info(f"Verifying column '{column}'")

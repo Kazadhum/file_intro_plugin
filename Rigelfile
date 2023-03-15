@@ -21,7 +21,6 @@ applications:
             - "~/catkin_ws/src/atom/csv_calibration_results/rgb_to_rgb_results.csv"
 
           # Value verification
-          verify_columns: True
           columns_to_verify:
             - "RMS (pix)"
 
