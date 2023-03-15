@@ -36,7 +36,7 @@ class FileIntrospectionPlugin(PluginBase):
     def run(self) -> None:
 
         # Read csv results file
-        results_df = pandas.read_csv(self.model.files[0], index_col="Collection #")
+        results_df = pandas.read_csv(self.model.file, index_col="Collection #")
         LOGGER.info(f"OUTPUT:\n {results_df}")
         
         
@@ -112,8 +112,12 @@ class FileIntrospectionPlugin(PluginBase):
 
         LOGGER.info(f"The results were {results_quality}!")
 
-        #Comparing quality level vs. required quality level
 
+        # Set "acceptable" as default requirement in case none is passed
+        if self.model.required_quality_level == None:
+            self.model.required_quality_level = "acceptable"
+
+        #Comparing quality level vs. required quality level    
         LOGGER.info(f"Required quality level: {self.model.required_quality_level}")
 
         if self.model.required_quality_level == "acceptable":

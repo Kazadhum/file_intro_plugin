@@ -17,8 +17,7 @@ applications:
       diogo_introspection:
         plugin: "file_intro_plugin.FileIntrospectionPlugin"
         with:
-          files:
-            - "~/catkin_ws/src/atom/csv_calibration_results/rgb_to_rgb_results.csv"
+          file: "~/catkin_ws/src/atom/csv_calibration_results/rgb_to_rgb_results.csv"
 
           # Value verification
           columns_to_verify:
@@ -42,7 +41,7 @@ applications:
 
 
           # Determines whether the test is passed or failed. "acceptable", "good" or "great"
-          required_quality_level: "good"
+          required_quality_level: "good" # Optional: "acceptable" is default
 
 
 sequences:
