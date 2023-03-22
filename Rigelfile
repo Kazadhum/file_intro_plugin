@@ -17,14 +17,15 @@ applications:
       diogo_introspection:
         plugin: "file_intro_plugin.FileIntrospectionPlugin"
         with:
-          file: "~/catkin_ws/src/atom/csv_calibration_results/rgb_to_rgb_results.csv"
+          file: "~/rgb_to_rgb_results.csv"
 
           # Value verification
           columns_to_verify:
             - "RMS (pix)"
 
-          column_verification_threshold: 2
-          verification_comparison_operator: ">" # Can be either ">" or "<"
+          # Optional thresholds, but at least one is needed for value verification to occur.
+          column_verification_upper_threshold: 2  
+          column_verification_lower_threshold: 0.5
 
           # Comparison value selection 
           use_latest_row: True # Only reads the value in the last row and the selected column

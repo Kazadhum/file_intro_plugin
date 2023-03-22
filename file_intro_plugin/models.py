@@ -14,5 +14,7 @@ class PluginModel(BaseModel):
     use_latest_row: bool
     use_latest_column: bool
     columns_to_verify: Optional[List[str]]
-    column_verification_threshold: float
-    verification_comparison_operator: str
+    column_verification_upper_threshold: Optional[float]
+    column_verification_lower_threshold: Optional[float]
+
+    # verification_comparison_operator: str

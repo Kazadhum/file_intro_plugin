@@ -45,22 +45,51 @@ class FileIntrospectionPlugin(PluginBase):
         verification_flag = True
 
         if self.model.columns_to_verify != None:
-            if self.model.verification_comparison_operator == ">":
-                for column in self.model.columns_to_verify:
-                    LOGGER.info(f"Verifying column '{column}'")
-                    column_max = results_df[column].max()
+            for column in self.model.columns_to_verify:
+                LOGGER.info(f"Verifying column '{column}'")
+                
+                # Get max and min values in the column
+                column_max = results_df[column].max()
+                column_min = results_df[column].min()
+                
+                # RefactoringuUpper and lower limits, if they are specified in Rigelfile
+                upper_limit = self.model.column_verification_upper_threshold
+                lower_limit = self.model.column_verification_lower_threshold
 
-                    if column_max > self.model.column_verification_threshold:
-                        verification_flag = False
+                # Issue a warning if no limit is specified
+                if (upper_limit == None and lower_limit == None):
+                    LOGGER.warning("No thresholds specified for value verification. Please edit your Rigelfile to include at least one threshold (upper or lower).")
+                else:
+                    pass
+                
+                if (upper_limit != None and column_max >= upper_limit):
+                    verification_flag = False
+                else:
+                    pass
 
-            if self.model.verification_comparison_operator == "<":
-                for column in self.model.columns_to_verify:
-                    LOGGER.info(f"Verifying column '{column}'")
+                if (lower_limit != None and column_min <= lower_limit):
+                    verification_flag = False
+                else:
+                    pass
+
+
+        # if self.model.columns_to_verify != None:
+        #     if self.model.verification_comparison_operator == ">":
+        #         for column in self.model.columns_to_verify:
+        #             LOGGER.info(f"Verifying column '{column}'")
+        #             column_max = results_df[column].max()
+
+        #             if column_max > self.model.column_verification_threshold:
+        #                 verification_flag = False
+
+        #     if self.model.verification_comparison_operator == "<":
+        #         for column in self.model.columns_to_verify:
+        #             LOGGER.info(f"Verifying column '{column}'")
                     
-                    column_min = results_df[column].min()
+        #             column_min = results_df[column].min()
 
-                    if column_min < self.model.column_verification_threshold:
-                        verification_flag = False
+        #             if column_min < self.model.column_verification_threshold:
+        #                 verification_flag = False
 
             LOGGER.info(f"Are the values verified? {verification_flag}")
 
