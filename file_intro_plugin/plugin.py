@@ -37,22 +37,25 @@ class FileIntrospectionPlugin(PluginBase):
 
         # Read csv results file
         results_df = pandas.read_csv(self.model.file, index_col="Collection #")
-        LOGGER.info(f"OUTPUT:\n {results_df}")
+        
+        LOGGER.info(f"\n{40*'#'}\nFile Introspection\n{40*'#'}\n\n{40*'-'}\nCSV File:\n{40*'-'}\n\n {results_df}\n")
         
         # Check for value abnormalities (optional process)
         verification_flag = True
         
         if self.model.columns_to_verify != None:
 
+            LOGGER.info(f"{40*'-'}\nValue Verification\n{40*'-'}\n")
+
             column_names = results_df.columns.values.tolist()
 
             for column in self.model.columns_to_verify:
-
                 # Check if the specified column exists in the .csv file
+
                 if (column_names.count(column) < 1):
-                    LOGGER.warning(f"The column specified for verification - {column} -  does not exist in the .csv file. Check for spelling errors.")
+                    LOGGER.warning(f"The column specified for verification - {column} -  does not exist in the .csv file. Check for spelling errors.\n")
                 else:
-                    LOGGER.info(f"Verifying column '{column}'")
+                    LOGGER.info(f"Verifying column '{column}'\n")
                     
                     # Get max and min values in the column
                     column_max = results_df[column].max()
@@ -64,7 +67,7 @@ class FileIntrospectionPlugin(PluginBase):
 
                     # Issue a warning if no limit is specified
                     if (upper_limit == None and lower_limit == None):
-                        LOGGER.warning("No thresholds specified for value verification. Please edit your Rigelfile to include at least one threshold (upper or lower).")
+                        LOGGER.warning("No thresholds specified for value verification. Please edit your Rigelfile to include at least one threshold (upper or lower).\n")
                     else:
                         pass
                     
@@ -80,7 +83,7 @@ class FileIntrospectionPlugin(PluginBase):
 
 
 
-            LOGGER.info(f"Are the values verified? {verification_flag}")
+            LOGGER.info(f"Are the values verified? {verification_flag}\n")
 
             if not verification_flag:
                 LOGGER.error("Abnormal values! Get new values!")
@@ -94,26 +97,26 @@ class FileIntrospectionPlugin(PluginBase):
             
             value_to_compare = results_df.loc[results_df.index[-1], results_df.columns[-1]]
 
-            LOGGER.info(f"Row: {results_df.index[-1]} | Column: {results_df.columns[-1]}\n {value_to_compare}")
+            LOGGER.info(f"{40*'-'}\nValue used for comparison:\n{40*'-'}\n\nRow: {results_df.index[-1]} | Column: {results_df.columns[-1]} | Value: {value_to_compare}\n")
 
         else:
             if self.model.use_latest_row:
                 
                 value_to_compare = results_df.loc[results_df.index[-1], self.model.value_column]
 
-                LOGGER.info(f"Row: {results_df.index[-1]} | Column: {self.model.value_column}\n {value_to_compare}")
+                LOGGER.info(f"{40*'-'}\nValue used for comparison:\n{40*'-'}\n\nRow: {results_df.index[-1]} | Column: {self.model.value_column} | Value: {value_to_compare}\n")
 
             elif self.model.use_latest_column:
                 
                 value_to_compare = results_df.loc[self.model.value_row, results_df.columns[-1]]
                 
-                LOGGER.info(f"Row: {self.model.value_row} | Column: {results_df.columns[-1]}\n {value_to_compare}")
+                LOGGER.info(f"{40*'-'}\nValue used for comparison:\n{40*'-'}\n\nRow: {self.model.value_row} | Column: {results_df.columns[-1]} | Value: {value_to_compare}\n")
 
             else:
                 
                 value_to_compare = results_df.loc[self.model.value_row, self.model.value_column]
 
-                LOGGER.info(f"Row:{self.model.value_row} | Column: {self.model.value_column}\n {value_to_compare}")
+                LOGGER.info(f"{40*'-'}\nValue used for comparison:\n{40*'-'}\n\nRow:{self.model.value_row} | Column: {self.model.value_column} | Value: {value_to_compare}\n")
 
 
         # Quality levels, values defined in Rigelfile
@@ -128,7 +131,9 @@ class FileIntrospectionPlugin(PluginBase):
         if value_to_compare <= self.model.great_threshold:
             results_quality = "great"
 
-        LOGGER.info(f"The results were {results_quality}!")
+
+
+        LOGGER.info(f"{40*'-'}\nIntrospection Results:\n{40*'-'}\n\nThe results were {results_quality}!\n")
 
 
         # Set "acceptable" as default requirement in case none is passed
@@ -136,25 +141,25 @@ class FileIntrospectionPlugin(PluginBase):
             self.model.required_quality_level = "acceptable"
 
         #Comparing quality level vs. required quality level    
-        LOGGER.info(f"Required quality level: {self.model.required_quality_level}")
+        LOGGER.info(f"Required quality level: {self.model.required_quality_level}\n")
 
         if self.model.required_quality_level == "acceptable":
             if results_quality != "bad":
-                LOGGER.info("Test passed!")
+                LOGGER.info("Test passed!\n")
             else:
-                LOGGER.info("Test failed!")
+                LOGGER.info("Test failed!\n")
 
         elif self.model.required_quality_level == "good":
             if (results_quality == "good" or results_quality == "great"):
-                LOGGER.info("Test passed!")
+                LOGGER.info("Test passed!\n")
             else:
-                LOGGER.info("Test failed!")
+                LOGGER.info("Test failed!\n")
 
         elif self.model.required_quality_level == "great":
             if results_quality == "great":
-                LOGGER.info("Test passed!")
+                LOGGER.info("Test passed!\n")
             else:
-                LOGGER.info("Test failed!")
+                LOGGER.info("Test failed!\n")
 
     def stop(self) -> None:
         # LOGGER.info("Running Stop") # Debug line

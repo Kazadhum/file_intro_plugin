@@ -25,7 +25,7 @@ applications:
 
           # Optional thresholds, but at least one is needed for value verification to occur.
           column_verification_upper_threshold: 2  
-          column_verification_lower_threshold: 0.5
+          # column_verification_lower_threshold: 0.5
 
           # Comparison value selection 
           use_latest_row: True # Only reads the value in the last row and the selected column
