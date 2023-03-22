@@ -39,57 +39,46 @@ class FileIntrospectionPlugin(PluginBase):
         results_df = pandas.read_csv(self.model.file, index_col="Collection #")
         LOGGER.info(f"OUTPUT:\n {results_df}")
         
-        
-
-        # Check for value abnormalities
+        # Check for value abnormalities (optional process)
         verification_flag = True
-
+        
         if self.model.columns_to_verify != None:
+
+            column_names = results_df.columns.values.tolist()
+
             for column in self.model.columns_to_verify:
-                LOGGER.info(f"Verifying column '{column}'")
-                
-                # Get max and min values in the column
-                column_max = results_df[column].max()
-                column_min = results_df[column].min()
-                
-                # RefactoringuUpper and lower limits, if they are specified in Rigelfile
-                upper_limit = self.model.column_verification_upper_threshold
-                lower_limit = self.model.column_verification_lower_threshold
 
-                # Issue a warning if no limit is specified
-                if (upper_limit == None and lower_limit == None):
-                    LOGGER.warning("No thresholds specified for value verification. Please edit your Rigelfile to include at least one threshold (upper or lower).")
+                # Check if the specified column exists in the .csv file
+                if (column_names.count(column) < 1):
+                    LOGGER.warning(f"The column specified for verification - {column} -  does not exist in the .csv file. Check for spelling errors.")
                 else:
-                    pass
-                
-                if (upper_limit != None and column_max >= upper_limit):
-                    verification_flag = False
-                else:
-                    pass
-
-                if (lower_limit != None and column_min <= lower_limit):
-                    verification_flag = False
-                else:
-                    pass
-
-
-        # if self.model.columns_to_verify != None:
-        #     if self.model.verification_comparison_operator == ">":
-        #         for column in self.model.columns_to_verify:
-        #             LOGGER.info(f"Verifying column '{column}'")
-        #             column_max = results_df[column].max()
-
-        #             if column_max > self.model.column_verification_threshold:
-        #                 verification_flag = False
-
-        #     if self.model.verification_comparison_operator == "<":
-        #         for column in self.model.columns_to_verify:
-        #             LOGGER.info(f"Verifying column '{column}'")
+                    LOGGER.info(f"Verifying column '{column}'")
                     
-        #             column_min = results_df[column].min()
+                    # Get max and min values in the column
+                    column_max = results_df[column].max()
+                    column_min = results_df[column].min()
+                    
+                    # RefactoringuUpper and lower limits, if they are specified in Rigelfile
+                    upper_limit = self.model.column_verification_upper_threshold
+                    lower_limit = self.model.column_verification_lower_threshold
 
-        #             if column_min < self.model.column_verification_threshold:
-        #                 verification_flag = False
+                    # Issue a warning if no limit is specified
+                    if (upper_limit == None and lower_limit == None):
+                        LOGGER.warning("No thresholds specified for value verification. Please edit your Rigelfile to include at least one threshold (upper or lower).")
+                    else:
+                        pass
+                    
+                    if (upper_limit != None and column_max >= upper_limit):
+                        verification_flag = False
+                    else:
+                        pass
+
+                    if (lower_limit != None and column_min <= lower_limit):
+                        verification_flag = False
+                    else:
+                        pass
+
+
 
             LOGGER.info(f"Are the values verified? {verification_flag}")
 
