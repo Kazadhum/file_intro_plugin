@@ -77,6 +77,7 @@ class FileIntrospectionPlugin(PluginBase):
                     use_latest_row = False
                 elif (type(column[column_name]['use_latest_row']) != bool):
                     LOGGER.warning(f"'validation_max' is not a boolean! Check your Rigelfile!")
+                    use_latest_row = False
                 else:
                     use_latest_row = column[column_name]['use_latest_row']
                 
