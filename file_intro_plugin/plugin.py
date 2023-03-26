@@ -30,7 +30,7 @@ class FileIntrospectionPlugin(PluginBase):
         self.model = ModelBuilder(PluginModel).build([], self.raw_data)
 
     def setup(self) -> None:
-        # LOGGER.info("Running Setup") #Debug line
+
         pass
 
     def run(self) -> None:
@@ -56,7 +56,7 @@ class FileIntrospectionPlugin(PluginBase):
                 #Get values from rigelfile
                 column_keys = list(column[column_name].keys())
                 
-                # Check for the existence of these fields and give default vaues if they don't exist
+                # Check for the existence of these fields and give default values if they don't exist
                 if (column_keys.count('validation_min') < 1):
                     validation_min = None
                 elif ([int, float].count(type(column[column_name]['validation_min'])) < 1): # Check for the types of values inputted
@@ -116,10 +116,37 @@ class FileIntrospectionPlugin(PluginBase):
                 else:
                     does_not_contain_str = column[column_name]['does_not_contain_str']
 
-                LOGGER.info(f"{results_df.index.tolist()}") # DEBUG LINE
-
                 # Check for contradictions in the rigelfile
+                # use_latest_row can't be True if value_row is specified
+                if (use_latest_row == True and value_row != None):
+                    LOGGER.error(f"'use_latest_row' cannot be True while 'value_row' is not None. Choose which row you want to use for comparison.")
+                    exit()
                 
+                # can't check for both strings and numeric values
+                if (acceptable_threshold != None and (contains_str != None or does_not_contain_str != None)):
+                    LOGGER.error(f"You can't choose to do introspection for both numeric and non-numeric values simultaneously. Only use either the 'acceptable_threshold' field for numeric values; use the 'contains_str' and/or 'does_not_contain_str' fields for non-numeric values.")
+                    exit()
+                
+
+
+                # VALIDATION PROCESS - for numerical values
+
+                LOGGER.info(f"{40*'-'}\nValue Verification for column {column_name}:\n{40*'-'}\n")
+
+                is_verified = True
+                
+                #Get maximum and minimum values
+                column_min = results_df[column_name].min()
+                column_max = results_df[column_name].max()
+                
+                #Validate the values
+                if (validation_min != None and column_min <= validation_min):
+                    is_verified = False
+                if (validation_max != None and column_max >= validation_max):
+                    is_verified = False
+
+                LOGGER.info(f"Are the values verified? {is_verified}\n") #DEBUG
+
 
         ################################
         # OLD CODE
