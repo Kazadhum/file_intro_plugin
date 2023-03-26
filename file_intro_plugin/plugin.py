@@ -128,10 +128,9 @@ class FileIntrospectionPlugin(PluginBase):
                     exit()
                 
 
-
                 # VALIDATION PROCESS - for numerical values
 
-                LOGGER.info(f"{40*'-'}\nValue Verification for column {column_name}:\n{40*'-'}\n")
+                LOGGER.info(f"{40*'-'}\nValue Verification for column '{column_name}':\n{40*'-'}\n")
 
                 is_verified = True
                 
@@ -145,7 +144,28 @@ class FileIntrospectionPlugin(PluginBase):
                 if (validation_max != None and column_max >= validation_max):
                     is_verified = False
 
-                LOGGER.info(f"Are the values verified? {is_verified}\n") #DEBUG
+                if is_verified:
+                    LOGGER.info(f"{column_name} is verified!\n")
+                else:
+                    LOGGER.error(f"{column_name} has abnormal values! Get new values!\n")
+                    exit()
+                
+
+                # INTROSPECTION PROCESS
+                LOGGER.info(f"{40*'-'}\nIntrospection for column '{column_name}':\n{40*'-'}\n")
+
+
+                if (use_latest_row == True):
+                    value_to_compare = results_df.loc[results_df.index[-1], column_name]
+                else:
+                    value_to_compare = results_df.loc[value_row, column_name]
+
+                LOGGER.info(f"Value to compare: {value_to_compare}")
+
+                
+                
+
+
 
 
         ################################

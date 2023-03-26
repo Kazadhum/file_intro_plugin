@@ -23,7 +23,7 @@ applications:
           introspection_target_columns:
             # - "RMS (pix)"
             - "RMS (pix)": {validation_min: 0, validation_max: 2, use_latest_row: False, value_row: 'Averages', acceptable_threshold: 3} #Check for strings in result as well as numeric as well as a string's absence
-            - "X err (pix)": {validation_min: 0.1, validation_max: 3}
+            # - "X err (pix)": {validation_min: 0.1, validation_max: 3}
           # # Optional thresholds, but at least one is needed for value verification to occur.
           # column_verification_upper_threshold: 2  # TODO: make this a dict to specify what thresholds relate to what column 
           # # column_verification_lower_threshold: 0.5
