@@ -92,13 +92,21 @@ class FileIntrospectionPlugin(PluginBase):
                 else:
                     value_row = column[column_name]['value_row']
 
-                if (column_keys.count('acceptable_threshold') < 1):
-                    acceptable_threshold = None
-                elif ([int, float].count(type(column[column_name]['acceptable_threshold'])) < 1):
-                    LOGGER.warning(f"'acceptable_threshold' is not an integer or float! Check your Rigelfile!")
-                    acceptable_threshold = None
+                if (column_keys.count('acceptable_min') < 1):
+                    acceptable_min = None
+                elif ([int, float].count(type(column[column_name]['acceptable_min'])) < 1):
+                    LOGGER.warning(f"'acceptable_min' is not an integer or float! Check your Rigelfile!")
+                    acceptable_min = None
                 else:
-                    acceptable_threshold = column[column_name]['acceptable_threshold']
+                    acceptable_min = column[column_name]['acceptable_min']
+
+                if (column_keys.count('acceptable_max') < 1):
+                    acceptable_max = None
+                elif ([int, float].count(type(column[column_name]['acceptable_max'])) < 1):
+                    LOGGER.warning(f"'acceptable_max' is not an integer or float! Check your Rigelfile!")
+                    acceptable_max = None
+                else:
+                    acceptable_min = column[column_name]['acceptable_max']
 
                 if (column_keys.count('contains_str') < 1):
                     contains_str = None
@@ -123,13 +131,12 @@ class FileIntrospectionPlugin(PluginBase):
                     exit()
                 
                 # can't check for both strings and numeric values
-                if (acceptable_threshold != None and (contains_str != None or does_not_contain_str != None)):
-                    LOGGER.error(f"You can't choose to do introspection for both numeric and non-numeric values simultaneously. Only use either the 'acceptable_threshold' field for numeric values; use the 'contains_str' and/or 'does_not_contain_str' fields for non-numeric values.")
+                if ((acceptable_min != None or acceptable_max != None) and (contains_str != None or does_not_contain_str != None)):
+                    LOGGER.error(f"You can't choose to do introspection for both numeric and non-numeric values simultaneously. Only use the 'acceptable_min' and 'acceptable_max' fields for numeric values; only use the 'contains_str' and/or 'does_not_contain_str' fields for non-numeric values.")
                     exit()
                 
 
                 # VALIDATION PROCESS - for numerical values
-
                 LOGGER.info(f"{40*'-'}\nValue Verification for column '{column_name}':\n{40*'-'}\n")
 
                 is_verified = True
@@ -161,7 +168,15 @@ class FileIntrospectionPlugin(PluginBase):
                     value_to_compare = results_df.loc[value_row, column_name]
 
                 LOGGER.info(f"Value to compare: {value_to_compare}")
+                
+                introspection_success = True
 
+                if (acceptable_min != None or acceptable_max != None): # Numerical introspection
+                    if (value_to_compare <= acceptable_min or value_to_compare >= acceptable_max):
+                        introspection_success = False
+                
+                elif (contains_str != None or does_not_contain_str != None):
+                    pass
                 
                 
 
