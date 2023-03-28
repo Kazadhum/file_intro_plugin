@@ -53,78 +53,23 @@ class FileIntrospectionPlugin(PluginBase):
             
             else: # If the column exists
 
+                LOGGER.info(f"{column[column_name].validation_min}")
+
                 #Get values from rigelfile
-                column_keys = list(column[column_name].keys())
+                # column_keys = list(column[column_name].keys())
                 
                 # Check for the existence of these fields and give default values if they don't exist
-                if (column_keys.count('validation_min') < 1):
-                    validation_min = None
-                elif ([int, float].count(type(column[column_name]['validation_min'])) < 1): # Check for the types of values inputted
-                    LOGGER.warning(f"'validation_min' is not an integer or float! Check your Rigelfile!")
-                    validation_min = None
-                else:
-                    validation_min = column[column_name]['validation_min']
                 
-                if (column_keys.count('validation_max') < 1):
-                    validation_max = None
-                elif ([int, float].count(type(column[column_name]['validation_max'])) < 1):
-                    LOGGER.warning(f"'validation_max' is not an integer or float! Check your Rigelfile!")
-                    validation_max = None
-                else:
-                    validation_max = column[column_name]['validation_max']
-                
-                if (column_keys.count('use_latest_row') < 1):
-                    use_latest_row = False
-                elif (type(column[column_name]['use_latest_row']) != bool):
-                    LOGGER.warning(f"'validation_max' is not a boolean! Check your Rigelfile!")
-                    use_latest_row = False
-                else:
-                    use_latest_row = column[column_name]['use_latest_row']
-                
-                if (column_keys.count('value_row') < 1):
-                    value_row = None
-                elif (rows_in_dataframe.count(column[column_name]['value_row']) < 1): # Check if this row exists in the dataframe
-                    LOGGER.warning(f"'value_row' does not exist in the dataframe!")
-                    value_row = None
-                elif (type(column[column_name]['value_row']) != str):
-                    LOGGER.warning(f"'value_row' is not a string! Check your Rigelfile!")
-                    value_row = None
-                else:
-                    value_row = column[column_name]['value_row']
+                validation_min = column[column_name].validation_min
+                validation_max = column[column_name].validation_max
+                use_latest_row = column[column_name].use_latest_row
+                value_row = column[column_name].value_row
+                acceptable_min = column[column_name].acceptable_min
+                acceptable_max = column[column_name].acceptable_max
+                contains_str = column[column_name].contains_str
+                does_not_contain_str = column[column_name].does_not_contain_str
 
-                if (column_keys.count('acceptable_min') < 1):
-                    acceptable_min = None
-                elif ([int, float].count(type(column[column_name]['acceptable_min'])) < 1):
-                    LOGGER.warning(f"'acceptable_min' is not an integer or float! Check your Rigelfile!")
-                    acceptable_min = None
-                else:
-                    acceptable_min = column[column_name]['acceptable_min']
-
-                if (column_keys.count('acceptable_max') < 1):
-                    acceptable_max = None
-                elif ([int, float].count(type(column[column_name]['acceptable_max'])) < 1):
-                    LOGGER.warning(f"'acceptable_max' is not an integer or float! Check your Rigelfile!")
-                    acceptable_max = None
-                else:
-                    acceptable_max = column[column_name]['acceptable_max']
-
-                if (column_keys.count('contains_str') < 1):
-                    contains_str = None
-                elif (type(column[column_name]['contains_str']) != str):
-                    LOGGER.warning(f"'contains_str' is not a string! Check your Rigelfile!")
-                    contains_str = None
-                else:
-                    contains_str = column[column_name]['contains_str']
-
-                if (column_keys.count('does_not_contain_str') < 1):
-                    does_not_contain_str = None
-                elif (type(column[column_name]['does_not_contain_str']) != str):
-                    LOGGER.warning(f"'does_not_contain_str' is not a string! Check your Rigelfile!")
-                    does_not_contain_str = None
-                else:
-                    does_not_contain_str = column[column_name]['does_not_contain_str']
-
-                # Check for contradictions in the rigelfile
+                # Check for contradictions in the Rigelfile
                 # use_latest_row can't be True if value_row is specified
                 if (use_latest_row == True and value_row != None):
                     LOGGER.error(f"'use_latest_row' cannot be True while 'value_row' is not None. Choose which row you want to use for comparison.")
