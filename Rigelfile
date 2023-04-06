@@ -28,5 +28,7 @@ applications:
 
 
 sequences:
-  deploy: ["diogo"]
+  deploy:
+    stages:
+      - jobs: ["diogo_introspection"]
 

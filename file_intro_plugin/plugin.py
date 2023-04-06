@@ -30,10 +30,10 @@ class FileIntrospectionPlugin(PluginBase):
         self.model = ModelBuilder(PluginModel).build([], self.raw_data)
 
     def setup(self) -> None:
-
+        LOGGER.info("DEBUG SETUP")
         pass
 
-    def run(self) -> None:
+    def start(self) -> None:
 
         # Read csv results file
         results_df = pandas.read_csv(self.model.file, index_col="Collection #")
@@ -144,11 +144,13 @@ class FileIntrospectionPlugin(PluginBase):
 
                 
 
-
+    def process(self) -> None:
+        LOGGER.info("DEBUG PROCESS")
+        pass
 
 
     def stop(self) -> None:
-        # LOGGER.info("Running Stop") # Debug line
+        LOGGER.info("DEBUG STOP") # Debug line
         pass
 
     
