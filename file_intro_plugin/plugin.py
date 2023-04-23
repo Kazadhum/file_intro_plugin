@@ -7,6 +7,8 @@ from rigel.models.rigelfile import RigelfileGlobalData
 from typing import Any, Dict
 from .models import PluginModel
 import pandas
+import os.path
+import time
 
 
 LOGGER = get_logger()
@@ -36,6 +38,10 @@ class FileIntrospectionPlugin(PluginBase):
     def start(self) -> None:
 
         # Read csv results file
+        while (not os.path.exists(self.model.file)):
+            time.sleep(1)
+        
+
         results_df = pandas.read_csv(self.model.file, index_col="Collection #")
         
         LOGGER.info(f"\n{40*'#'}\nFile Introspection\n{40*'#'}\n\n{40*'-'}\nCSV File:\n{40*'-'}\n\n {results_df}\n")
