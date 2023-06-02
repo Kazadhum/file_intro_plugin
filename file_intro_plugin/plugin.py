@@ -21,12 +21,14 @@ class FileIntrospectionPlugin(PluginBase):
         global_data: RigelfileGlobalData,
         application: Application,
         providers_data: Dict[str, Any]
+        shared_data: Dict[str, Any] = {}
     ) -> None:
         super().__init__(
             raw_data,
             global_data,
             application,
-            providers_data
+            providers_data,
+            shared_data
         )
 
         self.model = ModelBuilder(PluginModel).build([], self.raw_data)
