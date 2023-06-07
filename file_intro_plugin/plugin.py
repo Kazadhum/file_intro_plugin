@@ -20,7 +20,7 @@ class FileIntrospectionPlugin(PluginBase):
         raw_data: PluginRawData,
         global_data: RigelfileGlobalData,
         application: Application,
-        providers_data: Dict[str, Any]
+        providers_data: Dict[str, Any],
         shared_data: Dict[str, Any] = {}
     ) -> None:
         super().__init__(
