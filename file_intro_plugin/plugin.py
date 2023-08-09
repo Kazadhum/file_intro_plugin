@@ -42,6 +42,7 @@ class FileIntrospectionPlugin(PluginBase):
         # Read csv results file
         while (not os.path.exists(self.model.file)):
             time.sleep(1)
+            LOGGER.info("WAITING FOR FILE")
         
 
         results_df = pandas.read_csv(self.model.file, index_col="Collection #")
