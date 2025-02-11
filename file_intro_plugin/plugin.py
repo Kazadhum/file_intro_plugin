@@ -44,8 +44,10 @@ class FileIntrospectionPlugin(PluginBase):
             time.sleep(1)
             LOGGER.info("WAITING FOR FILE")
         
-
-        results_df = pandas.read_csv(self.model.file, index_col="Collection #")
+        try:
+            results_df = pandas.read_csv(self.model.file, index_col="Collection #")
+        except:
+            results_df = pandas.read_csv(self.model.file, index_col="Collection")
         
         LOGGER.info(f"\n{40*'#'}\nFile Introspection\n{40*'#'}\n\n{40*'-'}\nCSV File:\n{40*'-'}\n\n {results_df}\n")
 
